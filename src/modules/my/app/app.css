@@ -5,54 +5,132 @@
     border: 1px white solid;
 }
 
-.game-container {
-    width: 100%;
-    height: 80vh;
-    /* text-align: center;
-    margin:auto; */
+@media (min-width: 1250px) {
+    /* CSS that should be displayed if width is equal to or less than 800px goes here */
+    .game-container {
+        height: 90vh;
+        width: 650px;
+        margin-left: 1px;
+    }
+    .game-play div {
+        width: 20px;
+        height: 40px;
+        background: rgba(230, 250, 190, 0);
+        display: inline-block;
+    }
+    .game-play{
+        height: 88vh;
+        width: 100%;
+        background: url('./resources/images/roadCropped.png');
+        background-size: cover !important;
+        margin: auto;
+        border: 5px black solid;
+    }
+    .sideWays{
+        height: 88vh;
+        width: 100%;
+        background-image: url('./resources/images/sideTrees.jpg');
+        background-size: cover;
+        border: 5px black solid;
+    }
+    .scoreBoard{
+        margin-left: 216px;
+        height: 88vh;
+        width: 396px;
+        font-size: 22px;
+        font-family: system-ui;
+        background: #808de7;
+        border: 5px black solid;
+        color: white;
+    }
+    .scorePoints{
+        margin-top: 50px;
+        margin-left: 50px;
+    }
+    .scoreLogo{
+        background-image: url('./resources/images/logo.png') !important;
+        background-size: cover !important;
+        width: 130%;
+        height: 334px;
+        margin-left: -94px;
+    }
 }
 
-.game-play{
-    height: 80vh;
-    width: 100%;
-    background: url('/resource/raceGameResource/roadCropped.png');
+@media (min-width: 1600px) {
+    .game-container {
+        height: 90vh;
+        width: 900px; /*550*/
+        margin-left: 1px;
+    }
+    .game-play div {
+        width: 35px;
+        height: 70px;
+        background: rgba(230, 250, 190, 0);
+        display: inline-block;
+    }
+    .game-play{
+        height: 89vh;
+        width: 100%;
+        background: url('./resources/images/roadCropped.png');
+        background-size: cover !important;
+        margin: auto;
+        border: 5px black solid;
+    }
+
+    .sideWays{
+        /* float:left; */
+        height: 89vh;
+        width: 100%;
+        background-image: url('./resources/images/sideTrees.jpg');
+        background-size: cover;
+        border: 5px black solid;
+    }
+    .scoreBoard{
+        margin-left: 295px;
+        height: 89vh;
+        width: 707px;
+        font-size: 35px;
+    }
+    .scoreLogo{
+        background-image: url('./resources/images/logo.png') !important;
+        background-size: cover !important;
+        width: 707px;
+        height: 400px;
+        margin-left: -94px;
+    }
 }
 
-.game-play div {
-    width: 40px;
-    height: 80px;
-    background: rgba(230, 250, 190, 0);
-    display: inline-block;
-}
+
+
+
+
 
 .blastImg{
-    background: url('/resource/1648463055000/raceGameResource/boomImg.png') !important;
+    background: url('./resources/images/boomImg.png') !important;
+    background-size: cover !important;
     /* width: 80px !important; */
 }
 
 .myCar {
-    background: url('/resource/1648463055000/raceGameResource/greenCar.png') !important;
+    background-image: url('./resources/images/greenCar.png') !important;
+    background-size: cover !important;
 }
 
 .enemy {
-    background: url('/resource/1648463055000/raceGameResource/redCar.png') !important;
+    background-image: url('./resources/images/redCar.png') !important;
+    background-size: cover !important;
 }
 
 .enemyTruck {
-    background: url('/resource/1648463055000/raceGameResource/enemyTruck.png') !important;
+    background: url('./resources/images/enemyTruck.png') !important;
+    background-size: cover !important;
 }
 
 .enemyPolice {
-    background: url('/resource/1648463055000/raceGameResource/policeCar.png') !important;
+    background: url('./resources/images/policeCar.png') !important;
+    background-size: cover !important;
 }
 
-.sideWays{
-    /* float:left; */
-    height: 80vh;
-    width: 100%;
-    background-image: url(/resource/1648463055000/raceGameResource/sideTrees.jpg);
-    background-size: cover;
-}
 
 .food {
     background: red !important;

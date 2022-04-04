@@ -1,17 +1,16 @@
 import { LightningElement, track } from 'lwc';
-import gameResource from '@salesforce/resourceUrl/raceGameResource';
 
-
+const Game_Resource = './resources';
 export default class RaceGame extends LightningElement {
-
-    greenSideways = gameResource+'/sideTrees.jpg';
-    desertSideways = gameResource+'/sideDesert.jpg';
-    beachSideways = gameResource+'/sideBeach.jpg';
-    redCar = gameResource+'/redCar.png';
-    music1 = gameResource + '/music1.mp3';
-    music2 = gameResource + '/music2.mp3';
-    music3 = gameResource + '/music3.mp3';
-    music4 = gameResource + '/music4.mp3';
+    
+    greenSideways = Game_Resource+'/images/sideTrees.jpg';
+    desertSideways = Game_Resource+'/images/sideDesert.jpg';
+    beachSideways = Game_Resource+'/images/sideBeach.jpg';
+    redCar = Game_Resource+'/images/redCar.png';
+    music1 = Game_Resource + '/sounds/music1.mp3';
+    music2 = Game_Resource + '/sounds/music2.mp3';
+    music3 = Game_Resource + '/sounds/music3.mp3';
+    music4 = Game_Resource + '/sounds/music4.mp3';
 
     score = 0;
     highScore = 0;
@@ -41,9 +40,13 @@ export default class RaceGame extends LightningElement {
     enemyClass = 'enemy';
 
     connectedCallback() {
-        this.highScore = localStorage.getItem('lwc_snake_high')
-            ? localStorage.getItem('lwc_snake_high')
+        console.log( localStorage.getItem('lwc_race_game') );
+        this.highScore = localStorage.getItem('lwc_race_game')
+            ? localStorage.getItem('lwc_race_game')
             : 0;
+        if( !localStorage.getItem('lwc_race_game') ){
+            localStorage.setItem('lwc_race_game', 10);
+        }
     }
 
     get displaySpeed() {
@@ -63,7 +66,7 @@ export default class RaceGame extends LightningElement {
         );
 
         if( this.gameBlocks[newPosIndex].enemy ){
-            alert('Game Over');
+            this.setGameOver( newPosIndex );
         }
         else{
             this.gameBlocks[newPosIndex].myCar = true;
@@ -74,10 +77,7 @@ export default class RaceGame extends LightningElement {
     stopLoop( event ){
         clearInterval( this.intervalObj );
         clearInterval( this.int1 );
-        // this.audio1.pause();
-        // this.audio2.pause();
-        // this.audio3.pause();
-        // this.audio4.pause();
+        this.stopAudio()
     }
 
     intervalIds = [];
@@ -105,15 +105,27 @@ export default class RaceGame extends LightningElement {
         const gameContainerEl = this.template.querySelector('.game-play');
         const eWidth = gameContainerEl.clientWidth;
         const eHeight = gameContainerEl.clientHeight;
-
-        this.xMax = Math.floor(eWidth / 40);
-        this.yMax = Math.floor(eHeight / this.blockSize);
+        console.log('dims--',eWidth, eHeight);
+        let xBlock, yBlock;
+        if( eWidth < 500 ){
+            xBlock = 21;
+            yBlock = 12;
+        }
+        else{
+            xBlock = 16;
+            yBlock = 11;
+        }
+         
+        this.xMax = xBlock;//Math.floor(eWidth / xBlock);
+        this.yMax = yBlock;//Math.floor(eHeight / yBlock);
         const tmpBlocks = [];
 
+        this.xHead = this.xMax - 2;
+        this.yHead = this.yMax - 1;
         for (let y = 0; y < this.yMax; y++) {
             for (let x = 0; x < this.xMax; x++) {
                 let obj;
-                if (x === 3 && y === 8) {
+                if (x === this.xHead && y === this.yHead) {
                     obj = {
                         id: `${x}:${y}`,
                         myCar: true,
@@ -146,7 +158,6 @@ export default class RaceGame extends LightningElement {
                 if( element.enemy && !processedEnemies.includes( element.id ) ){
                     let cords = element.id.split(':');
                     let yCord = parseInt( cords[1] );
-                    console.log( (yCord + 2 > this.yMax) );
                     //console.log('enemy--',JSON.stringify( element ));
                     if( yCord + 2 > this.yMax){
                         this.addRemoveEnemy( element.id, false );
@@ -171,28 +182,26 @@ export default class RaceGame extends LightningElement {
                     clearInterval( this.int1 );
                     clearInterval( this.intervalObj );
                     this.startGame();
-                    console.log('inside X');
                 }
                 if( this.level == 5  ){
                     this.setSideWays( this.desertSideways, false );
                     this.enemyClass = 'enemyTruck';
-                    // this.audio1.pause();
-                    // this.audio2.play();
+                    this.audio1.pause();
+                    this.audio2.play();
                 }
                 if( this.level == 10 ){
                     this.setSideWays( this.beachSideways, true );
                     this.enemyClass = 'enemyPolice';
-                    // this.audio2.pause();
-                    // this.audio3.play();
+                    this.audio2.pause();
+                    this.audio3.play();
                 }
                 if( this.level == 15 ){
                     this.setSideWays( this.greenSideways, false );
                     this.enemyClass = 'enemy';
-                    // this.audio3.pause();
-                    // this.audio4.play();
+                    this.audio3.pause();
+                    this.audio4.play();
                 }
             }
-            console.log('speed--', this.speed);
         }
         catch(err){
             console.log('error when moving enemy-->', err);
@@ -208,14 +217,7 @@ export default class RaceGame extends LightningElement {
         if( this.gameBlocks[elementIndex] ){
             //console.log('Id added--', elementId);
             if( addEnemy && this.gameBlocks[elementIndex].myCar ){
-                this.gameBlocks[elementIndex].class = "blastImg";
-                clearInterval(this.int1);
-                clearInterval( this.intervalObj );
-                // this.audio.pause();
-                this.showOverlay = true;
-                
-                this.gameOver = true;
-                //alert('game over');
+                this.setGameOver( elementIndex );
                 return;
             }
             
@@ -223,6 +225,20 @@ export default class RaceGame extends LightningElement {
             this.gameBlocks[elementIndex].class = addEnemy ? this.enemyClass: '';
         }
         
+    }
+
+    setGameOver( elementIndex ){
+        this.stopAudio();
+        this.gameBlocks[elementIndex].class = "blastImg";
+        clearInterval(this.int1);
+        clearInterval( this.intervalObj );
+        this.showOverlay = true;
+        
+        this.gameOver = true;
+        if( this.score > this.highScore ){
+            this.highScore = this.score;
+            localStorage.setItem('lwc_race_game', this.score);
+        }
     }
 
     resetGame(){
@@ -258,10 +274,10 @@ export default class RaceGame extends LightningElement {
     }
 
     stopAudio(){
-        // this.audio1.pause();
-        // this.audio2.pause();
-        // this.audio3.pause();
-        // this.audio4.pause();
+        this.audio1.pause();
+        this.audio2.pause();
+        this.audio3.pause();
+        this.audio4.pause();
     }
 
     audioStarted;
@@ -276,7 +292,7 @@ export default class RaceGame extends LightningElement {
         }, this.speed+100 );
         
         if( !this.audioStarted ){
-            //this.audio1.play();
+            this.audio1.play();
             this.audioStarted = true;
         }
         
@@ -324,7 +340,6 @@ export default class RaceGame extends LightningElement {
                 try{
                     let tempXHead = this.xHead;
                     let tempYHead = this.yHead;
-                    console.log(e.key);
                     switch (e.key) {
                         case 'ArrowUp':
                             break;

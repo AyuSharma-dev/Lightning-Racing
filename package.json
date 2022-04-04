@@ -4,11 +4,14 @@
     "author": "AyuSharma-dev",
     "bugs": "https://github.com/AyuSharma-dev/demo-app/issues",
     "dependencies": {
+        "@lwc/synthetic-shadow": "^2.11.3",
         "compression": "^1.7.4",
         "express": "^4.17.3",
-        "helmet": "^5.0.2"
+        "helmet": "^5.0.2",
+        "lightning-base-components": "^1.14.6-alpha"
     },
     "devDependencies": {
+        "@salesforce-ux/design-system": "^2.17.5",
         "eslint": "^8.12.0",
         "eslint-plugin-inclusive-language": "^2.2.0",
         "husky": "^7.0.4",
