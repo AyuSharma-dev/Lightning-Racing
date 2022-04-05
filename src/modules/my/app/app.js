@@ -55,20 +55,20 @@ export default class RaceGame extends LightningElement {
 
     moveCar( tempXHead, tempYHead ){
 
-        const oldPosIndex = this.gameBlocks.findIndex(
-            (x) => x.id === `${tempXHead}:${tempYHead}`
-        );
-        this.gameBlocks[oldPosIndex].myCar = false;
-        this.gameBlocks[oldPosIndex].class = '';
-
         const newPosIndex = this.gameBlocks.findIndex(
             (x) => x.id === `${this.xHead}:${this.yHead}`
         );
 
-        if( this.gameBlocks[newPosIndex].enemy ){
+        if( this.gameBlocks[newPosIndex] && this.gameBlocks[newPosIndex].enemy ){
             this.setGameOver( newPosIndex );
         }
-        else{
+        else if( this.gameBlocks[newPosIndex] ){
+            const oldPosIndex = this.gameBlocks.findIndex(
+                (x) => x.id === `${tempXHead}:${tempYHead}`
+            );
+            this.gameBlocks[oldPosIndex].myCar = false;
+            this.gameBlocks[oldPosIndex].class = '';
+
             this.gameBlocks[newPosIndex].myCar = true;
             this.gameBlocks[newPosIndex].class = 'myCar';
         }
@@ -363,15 +363,19 @@ export default class RaceGame extends LightningElement {
                         case 'ArrowDown':
                             break;
                         case 'ArrowLeft':
-                            if( !this.pause ){
-                                this.xHead -= 1;
-                                this.moveCar( tempXHead, tempYHead );
+                            if( !this.pause){
+                                if(  this.xHead > 0 ){
+                                    this.xHead -= 1;
+                                    this.moveCar( tempXHead, tempYHead );
+                                }
                                 break;
                             }
                         case 'ArrowRight':
                             if( !this.pause ){
-                                this.xHead += 1;
-                                this.moveCar( tempXHead, tempYHead );
+                                if( this.xHead < this.xMax - 1 ){
+                                    this.xHead += 1;
+                                    this.moveCar( tempXHead, tempYHead );
+                                }
                                 break;
                             }
                         case 'p':
