@@ -126,8 +126,13 @@
     background-size: cover !important;
 }
 
-.enemyPolice {
-    background: url('./resources/images/policeCar.png') !important;
+.openCar {
+    background: url('./resources/images/openCar.png') !important;
+    background-size: cover !important;
+}
+
+.fastCar {
+    background: url('./resources/images/fastCar.png') !important;
     background-size: cover !important;
 }
 

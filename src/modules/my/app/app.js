@@ -183,21 +183,21 @@ export default class RaceGame extends LightningElement {
                     clearInterval( this.intervalObj );
                     this.startGame();
                 }
-                if( this.level == 5  ){
+                if( this.level == 7  ){
                     this.setSideWays( this.desertSideways, false );
                     this.enemyClass = 'enemyTruck';
                     this.audio1.pause();
                     this.audio2.play();
                 }
-                if( this.level == 10 ){
+                if( this.level == 14 ){
                     this.setSideWays( this.beachSideways, true );
-                    this.enemyClass = 'enemyPolice';
+                    this.enemyClass = 'openCar';
                     this.audio2.pause();
                     this.audio3.play();
                 }
-                if( this.level == 15 ){
+                if( this.level == 20 ){
                     this.setSideWays( this.greenSideways, false );
-                    this.enemyClass = 'enemy';
+                    this.enemyClass = 'fastCar';
                     this.audio3.pause();
                     this.audio4.play();
                 }
@@ -207,6 +207,21 @@ export default class RaceGame extends LightningElement {
             console.log('error when moving enemy-->', err);
         }
         
+    }
+
+    resumeMusic(){
+        if( this.level >= 7 && this.level < 14 ){
+            this.audio2.play();
+        }
+        else if( this.level >= 14 && this.level < 20 ){
+            this.audio3.play();
+        }
+        else if( this.level >= 20){
+            this.audio4.play();
+        }
+        else{
+            this.audio1.play();
+        }
     }
 
     addRemoveEnemy( elementId, addEnemy ){
@@ -249,10 +264,11 @@ export default class RaceGame extends LightningElement {
         this.gameOver = false;
         this.showOverlay = false;
         this.setSideWays( this.greenSideways, false );
-        this.audioStarted = false;
         this.enemyClass = 'enemy';
+        if( !this.musicPaused ){
+            this.audioStarted = false;
+        }
 
-        this.stopAudio();
         for( let i=0; i<this.gameBlocks.length; i++ ){
             if( this.gameBlocks[i].class != '' ){
                 this.gameBlocks[i].class = '';
@@ -333,6 +349,7 @@ export default class RaceGame extends LightningElement {
     }
 
     pause = false;
+    musicPaused = false;
     addKeyboardControls() {
         window.addEventListener('keydown', (e) => {
             e.preventDefault();
@@ -362,12 +379,29 @@ export default class RaceGame extends LightningElement {
                                 this.pause = false;
                                 this.showOverlay = false;
                                 this.startGame();
+                                this.resumeMusic();
+                                break;
                             }
                             else{
                                 this.pause = true;
                                 this.showOverlay = true;
                                 clearInterval(this.int1);
                                 clearInterval( this.intervalObj );
+                                this.stopAudio();
+                                break;
+                            }
+                        case 'k':
+                            if( !this.pause ){
+                                if( !this.musicPaused ){
+                                    this.stopAudio();
+                                    this.musicPaused = true;
+                                    break;
+                                }
+                                else{
+                                    this.resumeMusic();
+                                    this.musicPaused = false;
+                                    break;
+                                }
                             }
                         default:
                             break;
