@@ -108,16 +108,16 @@ export default class RaceGame extends LightningElement {
         console.log('dims--',eWidth, eHeight);
         let xBlock, yBlock;
         if( eWidth < 500 ){
-            xBlock = 21;
-            yBlock = 12;
+            xBlock = 20;
+            yBlock = 40;
         }
         else{
-            xBlock = 16;
-            yBlock = 11;
+            xBlock = 35;
+            yBlock = 70;
         }
          
-        this.xMax = xBlock;//Math.floor(eWidth / xBlock);
-        this.yMax = yBlock;//Math.floor(eHeight / yBlock);
+        this.xMax = Math.floor(eWidth / xBlock);
+        this.yMax = Math.floor(eHeight / yBlock);
         const tmpBlocks = [];
 
         this.xHead = this.xMax - 2;
@@ -186,20 +186,26 @@ export default class RaceGame extends LightningElement {
                 if( this.level == 7  ){
                     this.setSideWays( this.desertSideways, false );
                     this.enemyClass = 'enemyTruck';
-                    this.audio1.pause();
-                    this.audio2.play();
+                    if( !this.musicPaused ){
+                        this.audio1.pause();
+                        this.audio2.play();
+                    }
                 }
                 if( this.level == 14 ){
                     this.setSideWays( this.beachSideways, true );
                     this.enemyClass = 'openCar';
-                    this.audio2.pause();
-                    this.audio3.play();
+                    if( !this.musicPaused ){
+                        this.audio2.pause();
+                        this.audio3.play();
+                    }
                 }
                 if( this.level == 20 ){
                     this.setSideWays( this.greenSideways, false );
                     this.enemyClass = 'fastCar';
-                    this.audio3.pause();
-                    this.audio4.play();
+                    if( !this.musicPaused ){
+                        this.audio3.pause();
+                        this.audio4.play();
+                    }
                 }
             }
         }
