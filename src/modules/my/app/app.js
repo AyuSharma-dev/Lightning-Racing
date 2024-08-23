@@ -177,7 +177,7 @@ export default class RaceGame extends LightningElement {
                 //this.addRemoveEnemy( element.id, false );
                 this.enemiesInterval += 1;
                 if( this.enemiesInterval % 20 === 0 ){
-                    this.speed -= 4;
+                    this.speed -= 2;
                     this.level += 1;
                     clearInterval( this.int1 );
                     clearInterval( this.intervalObj );
